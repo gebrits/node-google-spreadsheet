@@ -6,13 +6,20 @@ var GoogleClientLogin = require('googleclientlogin').GoogleClientLogin;
 
 var GOOGLE_FEED_URL = "https://spreadsheets.google.com/feeds/";
 
-require('request-debug')(request);
+
 
 // NOTE: worksheet IDs start at 1
 
-module.exports = function(ss_key, auth_id) {
+module.exports = function(ss_key, auth_id, options) {
   var self = this;
   var google_auth;
+
+  options = options || {};
+
+  //debug requests
+  if (options.debug) {
+    require('request-debug')(request);
+  }
 
   var xml_parser = new xml2js.Parser({
     // options carried over from older version of xml2js -- might want to update how the code works, but for now this is fine

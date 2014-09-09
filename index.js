@@ -27,22 +27,29 @@ module.exports = function(ss_key, auth_id) {
     google_auth = auth_id;
   }
 
-  this.setAuth = function(username, password, cb) {
-    var new_auth = new GoogleClientLogin({
-      email: username,
-      password: password,
-      service: 'spreadsheets',
-      accountType: GoogleClientLogin.accountTypes.google
-    })
-    new_auth.on(GoogleClientLogin.events.login, function() {
-      google_auth = new_auth.getAuthId();
-      cb(null, new_auth);
-    })
-    new_auth.on(GoogleClientLogin.events.error, function(err) {
-      cb(err);
-    })
-    new_auth.login();
-  }
+  this.updateOauthBearerToken = function(token) {
+    google_auth = {
+      type: "Bearer",
+      value: token
+    };
+  };
+
+  // this.setAuth = function(username, password, cb) {
+  //   var new_auth = new GoogleClientLogin({
+  //     email: username,
+  //     password: password,
+  //     service: 'spreadsheets',
+  //     accountType: GoogleClientLogin.accountTypes.google
+  //   })
+  //   new_auth.on(GoogleClientLogin.events.login, function() {
+  //     google_auth = new_auth.getAuthId();
+  //     cb(null, new_auth);
+  //   })
+  //   new_auth.on(GoogleClientLogin.events.error, function(err) {
+  //     cb(err);
+  //   })
+  //   new_auth.login();
+  // }
 
   this.getInfo = function(cb) {
     self.makeFeedRequest(["worksheets", ss_key], 'GET', null, function(err, data, xml) {

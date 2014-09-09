@@ -1,13 +1,12 @@
 var request = require("request");
-
-require('request-debug')(request);
-
 var xml2js = require("xml2js");
 var http = require("http");
 var querystring = require("querystring");
 var GoogleClientLogin = require('googleclientlogin').GoogleClientLogin;
 
 var GOOGLE_FEED_URL = "https://spreadsheets.google.com/feeds/";
+
+require('request-debug')(request);
 
 // NOTE: worksheet IDs start at 1
 

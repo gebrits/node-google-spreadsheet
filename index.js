@@ -112,10 +112,6 @@ module.exports = function(ss_key, auth_id, options) {
 
 
   this.addRow = function(worksheet_id, data, cb) {
-    worksheet_id = parseInt(worksheet_id);
-    if (typeof worksheet_id !== 'number' || worksheet_id < 0) {
-      throw new Error('Valid worksheet not specified.');
-    }
 
     var data_xml = '<entry xmlns="http://www.w3.org/2005/Atom" xmlns:gsx="http://schemas.google.com/spreadsheets/2006/extended">' + "\n";
     Object.keys(data).forEach(function(key) {
@@ -156,6 +152,7 @@ module.exports = function(ss_key, auth_id, options) {
 
 
   this.makeFeedRequest = function(url_params, method, query_or_data, cb, ispatch) {
+
     var url;
     var headers = {};
     if (!cb) cb = function() {};
@@ -169,6 +166,7 @@ module.exports = function(ss_key, auth_id, options) {
       url_params.push(visibility, projection);
       url = GOOGLE_FEED_URL + url_params.join("/");
     }
+
     if (ispatch) {
       headers['If-Match'] = "*";
     }
@@ -187,6 +185,9 @@ module.exports = function(ss_key, auth_id, options) {
     if (method == 'GET' && query_or_data) {
       url += "?" + querystring.stringify(query_or_data);
     }
+
+    console.log("url", url);
+    console.log("data", query_or_data);
 
     request({
       url: url,

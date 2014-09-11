@@ -1,8 +1,8 @@
 {
-  "author": "Theo Ephraim <theozero@gmail.com> (http://theoephraim.com)",
+  "author": "Geert-Jan Brits <gbrits@gmail.com>",
   "name": "google-spreadsheet",
   "description": "Google Spreadsheet Data API -- simple interface to read and write rows and cells",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "keywords": [
     "google",
     "spreadsheet",

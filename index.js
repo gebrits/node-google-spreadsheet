@@ -108,7 +108,9 @@ module.exports = function(ss_key, auth_id, options) {
       });
       cb(null, rows);
     });
-  }
+  };
+
+
   this.addRow = function(worksheet_id, data, cb) {
     worksheet_id = parseInt(worksheet_id);
     if (typeof worksheet_id !== 'number' || worksheet_id < 0) {
@@ -123,7 +125,8 @@ module.exports = function(ss_key, auth_id, options) {
     });
     data_xml += '</entry>';
     self.makeFeedRequest(["list", ss_key, worksheet_id], 'POST', data_xml, cb);
-  }
+  };
+
   this.getCells = function(worksheet_id, opts, cb) {
     // opts is optional
     if (typeof(opts) == 'function') {
@@ -149,7 +152,8 @@ module.exports = function(ss_key, auth_id, options) {
 
       cb(null, cells);
     });
-  }
+  };
+
 
   this.makeFeedRequest = function(url_params, method, query_or_data, cb, ispatch) {
     var url;

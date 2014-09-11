@@ -185,10 +185,6 @@ module.exports = function(ss_key, auth_id, options) {
     if (method == 'GET' && query_or_data) {
       url += "?" + querystring.stringify(query_or_data);
     }
-
-    console.log("url", url);
-    console.log("data", query_or_data);
-
     request({
       url: url,
       method: method,

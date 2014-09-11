@@ -10,19 +10,20 @@
     "gdata",
     "api"
   ],
-  "homepage": "https://github.com/theoephraim/node-google-spreadsheet",
+  "homepage": "https://github.com/gebrits/node-google-spreadsheet",
   "repository": {
     "type": "git",
-    "url": "git://github.com/theoephraim/node-google-spreadsheet.git"
+    "url": "git://github.com/gebrits/node-google-spreadsheet.git"
   },
   "main": "index.js",
   "engines": {
     "node": ">=0.8.0"
   },
   "dependencies": {
+    "googleclientlogin": ">=0.2.8",
+    "lodash": "^2.4.1",
     "request": "~2.29.0",
-    "xml2js": "~0.4.0",
-    "googleclientlogin": ">=0.2.8"
+    "xml2js": "~0.4.0"
   },
   "devDependencies": {
     "nodeunit": "~0.8.2",

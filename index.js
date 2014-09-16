@@ -198,7 +198,7 @@ module.exports = function(ss_key, auth_id, options) {
         err.statusCode = response.statusCode;
         return cb(err);
       } else if (response.statusCode >= 400) {
-        err = new Error("HTTP error " + response.statusCode + ": " + http.STATUS_CODES[response.statusCode]);
+        err = new Error(response.body);
         err.statusCode = response.statusCode;
         return cb(err);
       }
@@ -213,8 +213,8 @@ module.exports = function(ss_key, auth_id, options) {
         else cb(null, true);
       }
 
-    })
-  }
+    });
+  };
 };
 
 // Classes

@@ -311,49 +311,6 @@ var SpreadsheetRow = function(spreadsheet, data, xml) {
   };
 
 
-  /**
-   * Hackish way to allow for Patch requests.
-   *
-   * A Patch request (partial update) is a normal PUT with the difference that not all fields are inside the PUT.
-   * If they are not, Google Spreadsheets API by default keeps the field-values for the non supplied fields. (which is exactly what we want)
-   *
-   * Moreover, by default 'checkForConflicts' is false.
-   * This results in a change from a normal PUT in that:
-   * - header If-Match:*
-   * - doing PUT request to link-relation 'self' instead of 'edit'. This makes sure
-   *
-   *
-   * If 'checkForConflicts' = true we do a partial update against a specific version of the row.
-   * If the row has updated in the meantime, we get a 409 conflict.
-   * This can be used for optimistic version resolution.
-   *
-   * @param  {[type]}   delta [description]
-   * @param  {Function} cb    [description]
-   * @return {[type]}         [description]
-   */
-  self.savePartial = function(delta, cb, checkForConflicts) {
-
-    var deltaKeys = _.keys(delta);
-
-    var data_xml = self['_xml'];
-    // probably should make this part more robust?
-    data_xml = data_xml.replace('<entry>', "<entry xmlns='http://www.w3.org/2005/Atom' xmlns:gsx='http://schemas.google.com/spreadsheets/2006/extended'>");
-
-    Object.keys(self).forEach(function(key) {
-      if (key.substr(0, 1) != '_' && typeof(self[key] == 'string')) {
-        if (deltaKeys.indexOf(key) !== -1) {
-          //overwrite for every key found in delta
-          data_xml = data_xml.replace(new RegExp('<gsx:' + xmlSafeColumnName(key) + ">([\\s\\S]*?)</gsx:" + xmlSafeColumnName(key) + '>'), '<gsx:' + xmlSafeColumnName(key) + '>' + xmlSafeValue(delta[key]) + '</gsx:' + xmlSafeColumnName(key) + '>');
-        } else {
-          //crucial: delete everything that isn't part of delta.
-          data_xml = data_xml.replace(new RegExp('<gsx:' + xmlSafeColumnName(key) + ">([\\s\\S]*?)</gsx:" + xmlSafeColumnName(key) + '>'), '');
-        }
-      }
-    });
-    spreadsheet.makeFeedRequest(checkForConflicts ? self['_links']['edit'] : self['_links']['self'], 'PUT', data_xml, cb, !checkForConflicts);
-  };
-
-
   self.del = function(cb) {
     spreadsheet.makeFeedRequest(self['_links']['edit'], 'DELETE', null, cb);
   };

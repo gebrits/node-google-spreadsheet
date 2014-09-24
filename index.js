@@ -123,6 +123,32 @@ module.exports = function(ss_key, auth_id, options) {
     self.makeFeedRequest(["list", ss_key, worksheet_id], 'POST', data_xml, cb);
   };
 
+  this.updateRow = function(worksheet_id, data, rowid, cb) {
+
+    ////ALWAYS OVERWRITE. IN future we may decide to use `sync` column as our own source for optimistic versioning
+    ///but this will probably still circumvents this Google Sheets own conflict check
+    var checkForConflicts = false;
+
+    var data_xml = '<entry xmlns="http://www.w3.org/2005/Atom" xmlns:gsx="http://schemas.google.com/spreadsheets/2006/extended">' + "\n";
+    Object.keys(data).forEach(function(key) {
+      if (key != '_links') {
+        data_xml += '<gsx:' + xmlSafeColumnName(key) + '>' + xmlSafeValue(data[key]) + '</gsx:' + xmlSafeColumnName(key) + '>' + "\n"
+      }
+    });
+    data_xml += '</entry>';
+
+    var url_params = ["list", ss_key, worksheet_id];
+    var visibility = google_auth ? 'private' : 'public';
+    var projection = google_auth ? 'full' : 'values';
+    url_params.push(visibility, projection);
+    url_params.push(rowid);
+
+    url = GOOGLE_FEED_URL + url_params.join("/");
+
+    self.makeFeedRequest(url, 'PUT', data_xml, cb, !checkForConflicts);
+  };
+
+
   this.getCells = function(worksheet_id, opts, cb) {
     // opts is optional
     if (typeof(opts) == 'function') {
@@ -185,6 +211,7 @@ module.exports = function(ss_key, auth_id, options) {
     if (method == 'GET' && query_or_data) {
       url += "?" + querystring.stringify(query_or_data);
     }
+
     request({
       url: url,
       method: method,

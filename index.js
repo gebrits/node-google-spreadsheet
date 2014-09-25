@@ -123,11 +123,8 @@ module.exports = function(ss_key, auth_id, options) {
     self.makeFeedRequest(["list", ss_key, worksheet_id], 'POST', data_xml, cb);
   };
 
-  this.updateRow = function(worksheet_id, data, rowid, cb) {
+  this.updateRow = function(worksheet_id, data, rowid, optversion, cb) {
 
-    ////ALWAYS OVERWRITE. IN future we may decide to use `sync` column as our own source for optimistic versioning
-    ///but this will probably still circumvents this Google Sheets own conflict check
-    var checkForConflicts = false;
 
     var data_xml = '<entry xmlns="http://www.w3.org/2005/Atom" xmlns:gsx="http://schemas.google.com/spreadsheets/2006/extended">' + "\n";
     Object.keys(data).forEach(function(key) {
@@ -143,9 +140,15 @@ module.exports = function(ss_key, auth_id, options) {
     url_params.push(visibility, projection);
     url_params.push(rowid);
 
+    //if supplied, use optimistic verioning
+    //reference: #42 
+    if (optversion) {
+      url_params.push(optversion);
+    }
+
     url = GOOGLE_FEED_URL + url_params.join("/");
 
-    self.makeFeedRequest(url, 'PUT', data_xml, cb, !checkForConflicts);
+    self.makeFeedRequest(url, 'PUT', data_xml, cb, !optversion);
   };
 
 
